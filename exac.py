@@ -39,7 +39,7 @@ Compress(app)
 app.config['COMPRESS_DEBUG'] = True
 cache = SimpleCache()
 
-EXAC_FILES_DIRECTORY = '../exac_data/'
+EXAC_FILES_DIRECTORY = 'data/exac_data/'
 REGION_LIMIT = 1E5
 EXON_PADDING = 50
 # Load default config and override config from an environment variable
@@ -923,5 +923,6 @@ def read_viz_files(path):
 
 
 if __name__ == "__main__":
-    runner = Runner(app)  # adds Flask command line options for setting host, port, etc.
-    runner.run()
+    #runner = Runner(app)  # adds Flask command line options for setting host, port, etc.
+    #runner.run()
+    app.run(host='0.0.0.0')

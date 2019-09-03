@@ -13,7 +13,8 @@ POPS = {
     'FIN': 'European (Finnish)',
     'NFE': 'European (Non-Finnish)',
     'SAS': 'South Asian',
-    'OTH': 'Other'
+    'OTH': 'Other',
+    'PHM': 'Phenom (All)'
 }
 
 
@@ -117,16 +118,16 @@ def get_variants_from_sites_vcf(sites_vcf):
                 else:
                     variant['allele_freq'] = None
 
-                variant['pop_acs'] = dict([(POPS[x], int(info_field['AC_%s' % x].split(',')[i])) for x in POPS])
-                variant['pop_ans'] = dict([(POPS[x], int(info_field['AN_%s' % x])) for x in POPS])
-                variant['pop_homs'] = dict([(POPS[x], int(info_field['Hom_%s' % x].split(',')[i])) for x in POPS])
-                variant['ac_male'] = info_field['AC_MALE']
-                variant['ac_female'] = info_field['AC_FEMALE']
-                variant['an_male'] = info_field['AN_MALE']
-                variant['an_female'] = info_field['AN_FEMALE']
+                variant['pop_acs'] = dict([(POPS[x], int(info_field.get('AC_%s' % x, ",".join(["0"]*(i+1))).split(',')[i].replace('.', "0"))) for x in POPS])
+                variant['pop_ans'] = dict([(POPS[x], int(info_field.get('AN_%s' % x, "0"))) for x in POPS])
+                variant['pop_homs'] = dict([(POPS[x], int(info_field.get('Hom_%s' % x, ",".join(["0"]*(i+1))).split(',')[i].replace('.', "0"))) for x in POPS])
+                variant['ac_male'] = info_field.get('AC_MALE', 0)
+                variant['ac_female'] = info_field.get('AC_FEMALE', 0)
+                variant['an_male'] = info_field.get('AN_MALE', 0)
+                variant['an_female'] = info_field.get('AN_FEMALE', 0)
                 variant['hom_count'] = sum(variant['pop_homs'].values())
                 if variant['chrom'] in ('X', 'Y'):
-                    variant['pop_hemis'] = dict([(POPS[x], int(info_field['Hemi_%s' % x].split(',')[i])) for x in POPS])
+                    variant['pop_hemis'] = dict([(POPS[x], int(info_field.get('Hemi_%s' % x, ",".join(["0"]*(i+1))).split(',')[i].replace('.', "0"))) for x in POPS])
                     variant['hemi_count'] = sum(variant['pop_hemis'].values())
                 variant['quality_metrics'] = dict([(x, info_field[x]) for x in METRICS if x in info_field])
 

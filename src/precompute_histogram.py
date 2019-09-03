@@ -41,9 +41,10 @@ def main(args):
 
         for metric in metrics:
             data = get_histogram_for_variant(line, metric)
-            midpoints, hist = data
-            new_info += ';%s_MID=' % (metric) + '|'.join(map(str, midpoints))
-            new_info += ';%s_HIST=' % (metric) + '|'.join(map(str, hist))
+            if data:
+                midpoints, hist = data
+                new_info += ';%s_MID=' % (metric) + '|'.join(map(str, midpoints))
+                new_info += ';%s_HIST=' % (metric) + '|'.join(map(str, hist))
 
         fields[header['INFO']] = new_info
         g.write('\t'.join(fields) + '\n')
